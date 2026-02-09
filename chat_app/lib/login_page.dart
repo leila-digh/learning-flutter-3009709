@@ -1,3 +1,7 @@
+import 'package:chat_app/chat_page.dart';
+import 'package:chat_app/utils/spaces.dart';
+import 'package:chat_app/utils/textfield_styles.dart';
+import 'package:chat_app/widgets/login_text_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
@@ -5,10 +9,12 @@ class LoginPage extends StatelessWidget {
 
   final _formkey = GlobalKey<FormState>();
 
-  void loginUser() {
+  void loginUser(context) {
     if (_formkey.currentState != null && _formkey.currentState!.validate()) {
       print(userNameController.text);
       print(passwordController.text);
+      
+      Navigator.pushReplacementNamed(context, '/chat', arguments: '${userNameController.text}');
 
       print('login successful!');
     } else {
@@ -57,42 +63,32 @@ class LoginPage extends StatelessWidget {
                 key: _formkey,
                 child: Column(
                   children: [
-                    TextFormField(
-                      validator: (value) {
-                        if (value != null &&
-                            value.isNotEmpty &&
-                            value.length < 5) {
-                          return "Your username should be more than 5 characters";
-                        } else if (value != null && value.isEmpty) {
-                          return "Please type your username";
-                        }
-                        return null;
-                      },
-                      controller: userNameController,
-                      decoration: InputDecoration(
-                          hintText: 'Add your username',
-                          hintStyle: TextStyle(color: Colors.blueGrey),
-                          border: OutlineInputBorder()),
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    TextFormField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          hintText: 'Type your password',
-                          hintStyle: TextStyle(color: Colors.blueGrey),
-                          border: OutlineInputBorder()),
-                    ),
+                  LoginTextField(
+                    hintText: "Enter your username",
+                    validator: (value) {
+                      if (value != null && value.isNotEmpty && value.length < 5) {
+                      return "Your username should be more than 5 characters";
+                      } else if (value != null && value.isEmpty) {
+                      return "Please type your username";
+                      }
+                      return null;
+                    },
+                    controller: userNameController,
+                ),
+                    verticalSpacing(24),
+               LoginTextField(
+                  controller: passwordController,
+                  hintText: 'Type your password',
+                  hasAsterisks: true,
+               )
                   ],
                 ),
               ),
-              SizedBox(
-                height: 24,
-              ),
+              verticalSpacing(24),
               ElevatedButton(
-                  onPressed: loginUser,
+                  onPressed: (){
+                    loginUser(context);
+                  },
                   child: Text(
                     'Login',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w300),
