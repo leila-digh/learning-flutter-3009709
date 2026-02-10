@@ -1,10 +1,20 @@
 import 'package:chat_app/chat_page.dart';
 import 'package:chat_app/login_page.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await AuthService.init();
+
   //TODO: Integrate Provider for State Management
-  runApp(ChatApp());
+  runApp(Provider (create: (BuildContext context){
+    return AuthService();
+  },
+    child: ChatApp(),
+  ));
 }
 
 class ChatApp extends StatelessWidget {
